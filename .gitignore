@@ -10,3 +10,13 @@ wheels/
 .venv
 
 vllm
+
+*.log
+*.db
+*.jsonl
+*.json
+*.xml
+*.txt
+*.tsv
+
+.env 

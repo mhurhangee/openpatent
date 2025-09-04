@@ -1,0 +1,59 @@
+paths:
+  # Input data location (directory containing files to process)
+  input: "data/input"           # Directory containing PDF, HTML, DOCX, PPT, TXT files
+  
+  # Output locations (4-stage pipeline directories)
+  output:
+    parsed: "data/parsed"       # Stage 1: Where parsed text files are saved (ingest output)
+    generated: "data/generated" # Stage 2: Where generated QA pairs are saved (create output)
+    curated: "data/curated"     # Stage 3: Where curated QA pairs are saved (curate output)
+    final: "data/final"         # Stage 4: Where final training formats are saved (save-as output)
+llm:
+  provider: "vllm"
+vllm:
+  api_base: "http://localhost:8000/v1"
+  port: 8000
+  model: "unsloth/gemma-3-270m-it-unsloth-bnb-4bit"  # Your actual model
+  max_retries: 3                       # Number of retries for API calls
+  retry_delay: 1.0                     # Initial delay between retries (seconds)
+
+ingest:
+  default_format: "txt"  # Default output format for parsed files
+
+generation:
+  temperature: 0.1   # Higher = more creative, lower = more deterministic
+  top_p: 0.95        # Nucleus sampling parameter
+
+  processing_strategy: "single"
+
+  max_tokens: 1024 #Maximum tokens in LLM responses
+
+  batch_size: 4
+
+curate:
+  threshold: 7.0     # Default quality threshold (1-10)
+  batch_size: 4      # Number of items per batch for rating (smaller batches for API stability)
+  inference_batch: 4 # Number of batches to process at once with VLLM
+  temperature: 0.1   # Temperature for rating (lower = more consistent)
+
+format:
+  default: "jsonl"   # Default output format
+  include_metadata: true  # Include metadata in output files
+  pretty_json: true  # Use indentation in JSON output
+
+prompts:
+  summary: |
+    Convert this patent description into clear, educational textbook content. Remove all patent-specific formatting, legal language, and formalities.
+    
+    Text: {text}
+    
+    Instructions:
+    - Rewrite in simple, educational language
+    - Remove patent numbers, claim references, legal disclaimers
+    - Focus on explaining the technology/concept clearly
+    - Use active voice and present tense
+    - Structure with clear headings and paragraphs
+    - Make it suitable for students/learners
+    - Remove phrases like "the present invention", "embodiment", "prior art"
+    
+    Educational Content:
