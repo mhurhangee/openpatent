@@ -20,3 +20,5 @@ vllm
 *.tsv
 
 .env 
+**/*.tsv..zip
+**/*.tsv..zip
