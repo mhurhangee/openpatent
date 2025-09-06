@@ -19,6 +19,9 @@ vllm
 *.txt
 *.tsv
 
+*/.ipynb_checkpoints
+
 .env 
 **/*.tsv..zip
 **/*.tsv..zip
+
