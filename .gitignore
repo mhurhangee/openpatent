@@ -18,6 +18,7 @@ vllm
 *.xml
 *.txt
 *.tsv
+*.csv
 
 **/.ipynb_checkpoints/
 
